@@ -1,0 +1,21 @@
+/* Маленькие доработки после подключения оригинального CSS.
+   Flask использует формы вокруг кнопок, потому что действия выполняет сервер Python. */
+.pill-controls form { display: flex; margin: 0; }
+.pill-controls form button { height: 100%; }
+.modal-close-btn { text-decoration: none; }
+.quick-add-buttons form { margin: 0; }
+.messages { width: min(800px, 90%); margin: 20px auto 0; }
+.message { border-radius: 10px; padding: 12px 16px; margin: 8px 0; }
+.message-success { color: #17652b; background: #e1f7e6; border: 1px solid #9dd8ab; }
+.message-error { color: #8a2020; background: #ffe5e5; border: 1px solid #f1b7b7; }
+.empty-state { text-align: center; padding: 50px 20px; font-size: 18px; opacity: .8; }
+
+@media (max-width: 850px) {
+    .pill-controls { width: 100%; flex-wrap: wrap; }
+    .pill-controls form { flex: 1 1 auto; }
+}
+
+@media (max-width: 600px) {
+    .pill-controls form { flex: 1 1 calc(50% - 8px); }
+    .pill-controls form button { width: 100%; }
+}

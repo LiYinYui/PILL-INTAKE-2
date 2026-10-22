@@ -1,0 +1,323 @@
+/* Запасные стили в духе исходного проекта My-pills.
+   Основной авторский CSS подключается ниже по ссылке на GitHub в index.html. */
+
+@font-face {
+    font-family: "Genshin_Impact";
+    src: local("Georgia");
+}
+
+:root {
+    --body-bg: linear-gradient(to bottom, #f7ecff 0%, #fff 100%);
+    --container-bg: #fff;
+    --card-bg: #fcf9ff;
+    --border-color: #e0c8ff;
+    --border-thick: #f9f1ff;
+    --text-main: #3e0772;
+    --item-bg: #f9f1ff;
+    --input-bg: #fff;
+}
+
+[data-theme="dark"] {
+    --body-bg: linear-gradient(to bottom, #2b1138 0%, #000 100%);
+    --container-bg: #121212;
+    --card-bg: #1a1a1a;
+    --border-color: #4a3b69;
+    --border-thick: #2d2d2d;
+    --text-main: #e0c8ff;
+    --item-bg: #222;
+    --input-bg: #222;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: "Genshin_Impact", Georgia, serif;
+    color: var(--text-main);
+    background: var(--body-bg) no-repeat fixed;
+}
+button, input { font: inherit; }
+form { margin: 0; }
+header {
+    height: 120px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background: var(--container-bg);
+}
+.container-topbar {
+    width: 1400px;
+    max-width: 100%;
+    height: 120px;
+    padding: 0 20px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header-title { font-size: 36px; margin: 0; color: var(--text-main); }
+.burger {
+    padding: 0;
+    border: 0;
+    z-index: 1000;
+    cursor: pointer;
+    background: transparent;
+    transition: transform .3s;
+}
+.burger:hover { transform: scale(1.06); }
+.burger.active { transform: rotate(90deg); }
+.topbarimg3 { height: 84px; max-width: 100%; object-fit: contain; }
+.nav {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    background: var(--container-bg);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    z-index: 999;
+}
+.nav.active { display: flex; }
+.nav a { font-size: 24px; text-decoration: none; color: var(--text-main); }
+.nav a:hover { color: #cf87ff; }
+.theme-btn {
+    padding: 10px 20px;
+    border: 2px solid var(--text-main);
+    background: transparent;
+    color: var(--text-main);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 18px;
+}
+.theme-btn:hover { background: var(--text-main); color: var(--container-bg); }
+.mainbody {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 1500px;
+    max-width: 95%;
+    margin: 30px auto;
+    padding-bottom: 50px;
+    background: var(--container-bg);
+    border-radius: 50px;
+}
+.maintextcontainer {
+    width: 100%;
+    min-height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+    border-radius: 50px;
+    background: linear-gradient(to bottom, rgba(235,214,255,.2), var(--container-bg));
+}
+.maintext { font-size: 58px; line-height: 1.2; text-align: center; color: var(--text-main); }
+.maintextr {
+    background: linear-gradient(90deg, #f7b1f3, #a35ee4, #7758ff, #86c8ee, #8492e4, #cb9fe9, #f8c0f1);
+    background-size: 400% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: rainbow-move 7s linear infinite;
+}
+@keyframes rainbow-move { 0% { background-position: 0 50%; } 100% { background-position: 400% 50%; } }
+.quick-add-section {
+    width: 800px;
+    max-width: 90%;
+    margin: 40px auto 20px;
+    padding: 20px;
+    text-align: center;
+    border-radius: 15px;
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+}
+.quick-add-section h3, .container-input-section h3 { font-size: 20px; margin: 0 0 15px; color: var(--text-main); }
+.quick-add-buttons { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+.quick-add-buttons form { margin: 0; }
+.quick-add-btn {
+    padding: 10px 15px;
+    border: 2px solid #a35ee4;
+    border-radius: 8px;
+    background: linear-gradient(45deg, #a35ee4, #7758ff);
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform .2s, opacity .2s;
+}
+.quick-add-btn:hover { transform: translateY(-2px); opacity: .9; }
+.container-input-section { display: flex; flex-direction: column; align-items: center; width: 100%; margin: 20px 0 50px; }
+.input-section { display: flex; gap: 15px; width: 800px; max-width: 90%; }
+#pillNameInput, #dailyCountInput {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--input-bg);
+    color: var(--text-main);
+}
+#dailyCountInput { flex: 0 0 170px; }
+#pillNameInput:focus, #dailyCountInput:focus { outline: none; border-color: #a35ee4; }
+#addPillBtn {
+    width: 45px;
+    min-width: 45px;
+    height: 45px;
+    border: 0;
+    border-radius: 10px;
+    background: linear-gradient(45deg, #a35ee4, #7758ff);
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+#addPillBtn:hover { transform: scale(1.05); }
+.container-list-section {
+    width: 1400px;
+    max-width: 95%;
+    min-height: 350px;
+    margin-top: 20px;
+    background: var(--card-bg);
+    border: 5px solid var(--border-thick);
+    border-radius: 20px;
+}
+.pill-list-header {
+    width: 100%;
+    min-height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--container-bg);
+    border-bottom: 3px solid var(--border-thick);
+    border-radius: 15px 15px 0 0;
+}
+.card-title-text { font-size: 30px; text-align: center; color: var(--text-main); }
+.medication-list-content { padding: 30px 40px; }
+.pill-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    padding: 15px 25px;
+    margin-bottom: 15px;
+    background: var(--item-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+}
+.pill-info { flex-grow: 1; display: flex; align-items: center; gap: 25px; }
+.pill-name { font-size: 22px; overflow-wrap: anywhere; flex: 0 1 300px; }
+.pill-progress-text { color: #7758ff; font-size: 18px; font-weight: bold; white-space: nowrap; }
+.pill-progress-text.completed { color: #4caf50; }
+.pill-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.info-pill-btn, .take-pill-btn, .reset-pill-btn, .delete-pill-btn {
+    display: inline-block;
+    padding: 10px 12px;
+    border: 0;
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.info-pill-btn { background: #7758ff; }
+.info-pill-btn:hover { background: #6a49e0; }
+.take-pill-btn { background: #4caf50; }
+.take-pill-btn:hover { background: #45a049; }
+.take-pill-btn:disabled { opacity: .55; cursor: not-allowed; }
+.reset-pill-btn { background: #ffa500; }
+.reset-pill-btn:hover { background: #e09300; }
+.delete-pill-btn { background: #ff6b6b; }
+.delete-pill-btn:hover { background: #e55e5e; }
+.empty-state { text-align: center; padding: 50px 20px; font-size: 18px; opacity: .8; }
+.messages { width: min(800px, 90%); margin: 20px auto 0; }
+.message { border-radius: 10px; padding: 12px 16px; margin: 8px 0; }
+.message-success { color: #17652b; background: #e1f7e6; border: 1px solid #9dd8ab; }
+.message-error { color: #8a2020; background: #ffe5e5; border: 1px solid #f1b7b7; }
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    padding: 15px;
+}
+.modal-overlay.active { display: flex; }
+.modal-content {
+    width: 500px;
+    max-width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 30px;
+    position: relative;
+    background: var(--container-bg);
+    color: var(--text-main);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.5);
+}
+.modal-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 20px;
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 30px;
+    line-height: 1;
+}
+.modal-close-btn:hover { color: #ff6b6b; }
+.modal-title { font-size: 28px; text-align: center; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin: 0 0 20px; }
+.modal-subtitle { font-size: 18px; color: #7758ff; margin: 15px 0 5px; }
+.modal-text { font-size: 16px; line-height: 1.5; padding-left: 10px; }
+.modal-warning { margin-top: 25px; font-size: 14px; color: #ff6b6b; text-align: center; }
+footer { min-height: 100px; background: #000; display: flex; align-items: center; justify-content: flex-end; padding: 25px 8%; }
+.footertext { color: #fff; font-size: 20px; }
+
+@media (max-width: 1200px) {
+    .header-title { font-size: 30px; }
+    .maintext { font-size: 46px; }
+    .maintextcontainer { min-height: 200px; }
+    .pill-item { align-items: flex-start; }
+}
+@media (max-width: 850px) {
+    .mainbody { border-radius: 30px; }
+    .container-list-section { width: 95%; }
+    .medication-list-content { padding: 20px; }
+    .pill-item { flex-direction: column; align-items: flex-start; padding: 15px; }
+    .pill-info { width: 100%; gap: 15px; margin-bottom: 10px; }
+    .pill-name { font-size: 20px; flex: auto; }
+    .pill-controls { width: 100%; justify-content: flex-start; }
+}
+@media (max-width: 600px) {
+    header, .container-topbar { height: 90px; }
+    .header-title { font-size: 24px; }
+    .topbarimg3 { height: 65px; }
+    .mainbody { margin: 15px auto; padding-bottom: 30px; border-radius: 20px; }
+    .maintext { font-size: 30px; line-height: 1.2; }
+    .maintextcontainer { min-height: 150px; border-radius: 20px; }
+    .quick-add-section { padding: 15px; }
+    .quick-add-section h3 { font-size: 16px; }
+    .quick-add-buttons { gap: 10px; }
+    .quick-add-buttons form { flex: 1 1 calc(50% - 10px); }
+    .quick-add-btn { width: 100%; font-size: 13px; padding: 9px 6px; }
+    .input-section { flex-direction: column; }
+    #dailyCountInput { flex: auto; }
+    #addPillBtn { width: 100%; height: 42px; }
+    .card-title-text { font-size: 24px; }
+    .pill-controls form { flex: 1; }
+    .take-pill-btn, .reset-pill-btn, .delete-pill-btn, .info-pill-btn { width: 100%; text-align: center; padding: 9px 6px; }
+    .pill-controls { gap: 7px; }
+    .pill-progress-text { font-size: 16px; }
+    .modal-content { padding: 24px 20px; }
+    .modal-title { font-size: 24px; }
+    .modal-subtitle { font-size: 17px; }
+    .modal-text { font-size: 14px; }
+    footer { min-height: 80px; padding-right: 25px; }
+}

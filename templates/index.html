@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="{{ theme }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My-pills</title>
+    <link rel="icon" type="image/webp" href="https://cdn.jsdelivr.net/gh/LiYinYui/My-pills@main/img/i.webp">
+
+    <!-- Локальные стили — резервный вариант, если GitHub временно недоступен. -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Подключаем оригинальный CSS из проекта, чтобы сохранить авторское оформление. -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LiYinYui/My-pills@main/css/style.css">
+    <!-- Небольшие исправления для кнопок в HTML-формах Flask. -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='overrides.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container-topbar">
+            <h1 class="header-title">PILL INTAKE</h1>
+
+            <!-- Кнопка открывает меню; JavaScript здесь отвечает только за внешний вид меню. -->
+            <button class="burger" id="burgerBtn" type="button" aria-label="Открыть меню" aria-expanded="false">
+                <img src="https://cdn.jsdelivr.net/gh/LiYinYui/My-pills@main/img/%D0%BA%D1%80%D1%83%D1%82%D0%BA%D0%B0.png"
+                    class="topbarimg3" alt="Меню" height="100">
+            </button>
+
+            <nav class="nav" id="nav">
+                <a href="#">Создано ©YinYui</a>
+                <!-- Переключение темы обрабатывается Python-маршрутом /theme. -->
+                <form class="theme-form" action="{{ url_for('toggle_theme') }}" method="post">
+                    <button id="themeToggleBtn" class="theme-btn" type="submit">
+                        {% if theme == 'dark' %}☀️ Светлая тема{% else %}🌙 Тёмная тема{% endif %}
+                    </button>
+                </form>
+            </nav>
+        </div>
+    </header>
+
+    <main class="mainbody">
+        <div class="maintextcontainer">
+            <div class="maintext">
+                Отслеживай прием своих <span class="maintextr">лекарств</span>
+            </div>
+        </div>
+
+        <!-- Сообщения об успешных действиях и ошибках возвращаются из Python. -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="messages" aria-live="polite">
+                    {% for category, message in messages %}
+                        <div class="message message-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <section class="quick-add-section">
+            <h3>Быстрое добавление препаратов:</h3>
+            <div class="quick-add-buttons">
+                {% for item in quick_add %}
+                    <form action="{{ url_for('quick_add_medication', key=item.key) }}" method="post">
+                        <button class="quick-add-btn" type="submit">{{ item.name }}</button>
+                    </form>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="container-input-section wide-input-section">
+            <h3>Добавить свой препарат:</h3>
+            <form class="input-section" action="{{ url_for('add_medication') }}" method="post">
+                <input type="text" id="pillNameInput" name="name"
+                    placeholder="Название препарата (например, Аспирин)" maxlength="100" required>
+                <input type="number" id="dailyCountInput" name="daily_count"
+                    placeholder="Приёмов в день" min="1" max="100" required>
+                <button id="addPillBtn" type="submit" aria-label="Добавить препарат">+</button>
+            </form>
+        </section>
+
+        <section class="container-list-section">
+            <div class="pill-list-header">
+                <div class="card-title-text">Мои препараты</div>
+            </div>
+            <div id="medicationList" class="medication-list-content">
+                {% if medications %}
+                    {% for med in medications %}
+                        <article class="pill-item">
+                            <div class="pill-info">
+                                <span class="pill-name">{{ med.name }}</span>
+                                <span class="pill-progress-text {% if med.current_count >= med.daily_count %}completed{% endif %}">
+                                    {{ med.current_count }} / {{ med.daily_count }}
+                                </span>
+                            </div>
+                            <div class="pill-controls">
+                                {% if med.info_key and med.info_key in ['vitamin_d', 'vitamin_c', 'omega_3', 'magnesium', 'vitamin_b', 'iron'] %}
+                                    <a class="info-pill-btn" href="{{ url_for('index', info=med.info_key) }}">Подробнее</a>
+                                {% endif %}
+                                <form action="{{ url_for('medication_action', medicine_id=med.id, action='take') }}" method="post">
+                                    <button class="take-pill-btn" type="submit"
+                                            {% if med.current_count >= med.daily_count %}disabled{% endif %}>
+                                        Принято
+                                    </button>
+                                </form>
+                                <form action="{{ url_for('medication_action', medicine_id=med.id, action='reset') }}" method="post">
+                                    <button class="reset-pill-btn" type="submit">Сбросить</button>
+                                </form>
+                                <form action="{{ url_for('medication_action', medicine_id=med.id, action='delete') }}" method="post">
+                                    <button class="delete-pill-btn" type="submit">Удалить</button>
+                                </form>
+                            </div>
+                        </article>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        Пока препаратов нет. Добавь первый с помощью кнопок выше.
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+
+    <!-- Окно справки появляется после нажатия «Подробнее». -->
+    <div id="infoModal" class="modal-overlay {% if info %}active{% endif %}">
+        <div class="modal-content">
+            <a class="modal-close-btn" id="closeModalBtn" href="{{ url_for('index') }}" aria-label="Закрыть">&times;</a>
+            {% if info %}
+                <h2 id="modalTitle" class="modal-title">{{ info.name }}</h2>
+                <div class="modal-info-section">
+                    <h4 class="modal-subtitle">Когда принимать:</h4>
+                    <p id="modalTime" class="modal-text">{{ info.time }}</p>
+                </div>
+                <div class="modal-info-section">
+                    <h4 class="modal-subtitle">Полезно знать:</h4>
+                    <p id="modalAdvice" class="modal-text">{{ info.advice }}</p>
+                </div>
+                <div class="modal-info-section">
+                    <h4 class="modal-subtitle">Описание:</h4>
+                    <p id="modalDescription" class="modal-text">{{ info.description }}</p>
+                </div>
+            {% endif %}
+            <p class="modal-warning">⚠️ Информация носит справочный характер. Принимай препараты по инструкции и назначению врача.</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footertext">©YinYui</div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
